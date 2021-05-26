@@ -7,8 +7,11 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.ballCount = 0;
   this.endX = this.leftBound + (this.rightBound-this.leftBound)/2;
   this.endY = this.bottom-this.height;
+  this.histY = bottom;
   
   this.draw = function() {
+    fill(51);
+    stroke(51);
     line(this.leftBound, this.bottom-this.height, this.leftBound, this.bottom);
     line(this.rightBound, this.bottom-this.height, this.rightBound, this.bottom);
     line(this.leftBound, this.bottom, this.rightBound, this.bottom);
@@ -32,65 +35,73 @@ function Pin(x, y, r, row, col){
   this.col = col;
   this.leftTrajectory;
   this.rightTrajectory;
+  this.leftPin;
+  this.rightPin;
 
   this.draw = function(){
     fill(51);
-    circle(x, y ,r);
+    stroke(51);
+    circle(this.x, this.y ,this.r);
   }
 
-  this.getTrajectory = function(targetX, targetY){
-  	let midX = this.x + (targetX-this.x)/2;
-  	let midY = this.y + (this.y-targetY)/4;
-  	let A = []
-  	A.push([this.x*this.x, this.x, 1]);
-  	A.push([targetX*targetX, targetX, 1]);
-  	A.push([midX*midX, midX, 1]);
-  	let b = [this.y, targetY, midY];
-  	let res = math.lusolve(A, b);
-  	for(let i=0; i<3; i++){
-  		res.push(res.shift()[0]);
-  	}
-  	return res;
+  this.calcTrajectory = function(targetX, targetY) {
+    let midX = this.x + (targetX-this.x)/2;
+    let midY = this.y + (this.y-targetY)/4;
+    let A = []
+    A.push([this.x*this.x, this.x, 1]);
+    A.push([targetX*targetX, targetX, 1]);
+    A.push([midX*midX, midX, 1]);
+    let b = [this.y, targetY, midY];
+    let res = math.lusolve(A, b);
+    for(let i=0; i<3; i++){ res.push(res.shift()[0]); }
+    return res;
   }
 
-  
-  this.calcTrajectory = function(leftPin, rightPin){
-  	let leftMidX = this.x + (leftPin.x-this.x)/2;
-  	let leftMidY = this.y + (this.y-leftPin.y)/4;
-  	let A = []
-  	A.push([this.x*this.x, this.x, 1]);
-  	A.push([leftPin.x*leftPin.x, leftPin.x, 1]);
-  	A.push([leftMidX*leftMidX, leftMidX, 1]);
-  	let b = [this.y, leftPin.y, leftMidY];
-  	let res = math.lusolve(A, b);
-  	for(let i=0; i<3; i++){ res.push(res.shift()[0]); }
-  	this.leftTrajectory = res;
-
-  	let rightMidX = this.x + (rightPin.x-this.x)/2;
-  	let rightMidY = this.y + (this.y-rightPin.y)/4;
-  	A = []
-  	A.push([this.x*this.x, this.x, 1]);
-  	A.push([rightPin.x*rightPin.x, rightPin.x, 1]);
-  	A.push([rightMidX*rightMidX, rightMidX, 1]);
-  	b = [this.y, rightPin.y, rightMidY];
-  	res = math.lusolve(A, b);
-  	for(let i=0; i<3; i++){ res.push(res.shift()[0]); }
-  	this.rightTrajectory = res;
+  this.getTrajectory = function(){
+    this.leftTrajectory = this.calcTrajectory(this.leftPin.x, this.leftPin.y);
+    this.rightTrajectory = this.calcTrajectory(this.rightPin.x, this.rightPin.y);
   }
 
   return this;
 }
 
-function Ball(x, y, r){
+function Ball(x, y, r, targetPin){
   this.x = x;
   this.y = y;
   this.r = r;
+  this.availableColors = ["red", "green", "blue", "yellow", "purple", "cyan", "magenta", "orange"];
+  this.color = this.availableColors[Math.floor(Math.random() * this.availableColors.length)];
+  this.targetPin = targetPin;
   this.dir = 0;
+  this.trajectory = [];
+  this.bin = null;
 
-  this.transform = function(dx){
-    dx = this.dir*dx;
-    this.x += dx;
-    this.y = A*x*x + B*x
+  this.transform = function(d){
+    if(this.dir == 0){ this.y += d*2; }
+    else {
+      this.x += this.dir * d;
+      this.y = this.x*this.x*this.trajectory[0] + this.x*this.trajectory[1] + this.trajectory[2];
+    }
+
+    if(this.targetPin != null && this.targetPin.y - this.y <= this.r) {
+      let r = Math.random();
+      if(r <= window.probability){
+        this.dir = 1;
+        this.trajectory = this.targetPin.rightTrajectory;
+        this.targetPin = this.targetPin.rightPin;
+      }
+      else{
+        this.dir = -1;
+        this.trajectory = this.targetPin.leftTrajectory;
+        this.targetPin = this.targetPin.leftPin;
+      }
+    }
+  }
+
+  this.draw = function(){
+    fill(this.color);
+    noStroke();
+    circle(this.x, this.y ,this.r);
   }
 
   return this;

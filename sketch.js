@@ -2,6 +2,7 @@ var canvasHeight = 400;
 var canvasWidth = 600;
 
 var binCountChanged = false;
+var dropBall = false;
 var probability = 0.5;
 
 var binCount = 5;
@@ -17,7 +18,8 @@ var pinDimension;
 
 var ballStartX;
 var ballStartY;
-var ballRadius = 2;
+var ballRadius = 10;
+var ballList = [];
 
 function initBoard(binCount){
 	binWidth = Math.floor((canvasWidth-(binOffset*2))/binCount);
@@ -55,20 +57,18 @@ function initBoard(binCount){
 	for(let r=0; r<pinDimension-1; r++){
 	  	for(let c=0; c<pinTree[r].length; c++){
 	  		let curPin = pinTree[r][c];
-	  		let leftPin = pinTree[r+1][c];
-	  		let rightPin = pinTree[r+1][c+1];
-	  		curPin.calcTrajectory(leftPin, rightPin);
+	  		curPin.leftPin = pinTree[r+1][c];
+	  		curPin.rightPin = pinTree[r+1][c+1];
+	  		curPin.getTrajectory();
 	  	}
 	}
 	for(let c=0; c<pinTree[pinDimension-1].length; c++){
 	  	let curPin = pinTree[pinDimension-1][c];
 	  	let leftBin = binList[c];
 	  	let rightBin = binList[c+1];
-	  	let leftPin = new Pin(leftBin.endX, leftBin.endY, 0, 0, 0);
-	  	let rightPin = new Pin(rightBin.endX, rightBin.endY, 0, 0, 0);
-	  	curPin.calcTrajectory(leftPin, rightPin);
+	  	curPin.leftTrajectory = curPin.calcTrajectory(leftBin.endX, leftBin.endY);
+	  	curPin.rightTrajectory = curPin.calcTrajectory(rightBin.endX, rightBin.endY);
 	}
-
 }
 
 function drawBoard(){
@@ -87,8 +87,6 @@ function drawTrajectory(){
 	  		let curPin = pinTree[r][c];
 	  		let leftPin = pinTree[r+1][c];
 	  		let rightPin = pinTree[r+1][c+1];
-	  		//let leftTrajectory = curPin.getTrajectory(leftPin.x, leftPin.y);
-	  		//let rightTrajectory = curPin.getTrajectory(rightPin.x, rightPin.y);
 	  		let leftTrajectory = curPin.leftTrajectory;
 	  		let rightTrajectory = curPin.rightTrajectory;
 	  		for(let x=curPin.x; x>leftPin.x; x--){
@@ -104,8 +102,6 @@ function drawTrajectory(){
 	  	let curPin = pinTree[pinDimension-1][c];
 	  	let leftBin = binList[c];
 	  	let rightBin = binList[c+1];
-	  	//let leftTrajectory = curPin.getTrajectory(leftBin.endX, leftBin.endY);
-	  	//let rightTrajectory = curPin.getTrajectory(rightBin.endX, rightBin.endY);
 	  	let leftTrajectory = curPin.leftTrajectory;
 	  	let rightTrajectory = curPin.rightTrajectory;
 	  	for(let x=curPin.x; x>leftBin.leftBound; x--){
@@ -128,11 +124,40 @@ function setup() {
 }
 
 function draw() {
-  background(220);
-  if(binCountChanged) {
-  	initBoard(binCount);
-  	binCountChanged = false;
-  }
-  drawBoard();
-  drawTrajectory();
+	background(220);
+	if(binCountChanged) {
+		ballList = [];
+		initBoard(binCount);
+		binCountChanged = false;
+	}
+
+	drawBoard();
+	//drawTrajectory();
+
+	if(dropBall){
+		if(ballList.length == 0 /*|| ballList[ballList.length-1].y + ballList[ballList.length-1].r 
+								   > pinTree[0][0].y*/){
+			ballList.push(new Ball(ballStartX, ballStartY, ballRadius, pinTree[0][0]));	
+		}
+	}
+    let length = ballList.length;
+	for(let i=0; i<length; i++){
+		let ball = ballList.shift();
+		ball.transform(2);
+		if(ball.bin == null && ball.y + ball.r > canvasHeight - binOffset - binHeight){
+			ball.bin = binList[Math.floor((ball.x-binOffset)/binWidth)];
+		}
+		if(ball.bin == null || ball.y + ball.r < ball.bin.histY){
+			ball.draw();
+			ballList.push(ball);
+		}
+		else if(ball.bin != null){
+			ball.bin.ballCount++;
+		}
+	}
+	/*
+	let str = "";
+	binList.forEach((bin) => { str += bin.ballCount + " "; });
+	console.log(str);
+	*/
 }

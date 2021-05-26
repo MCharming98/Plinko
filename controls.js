@@ -36,11 +36,13 @@ controlBtn.addEventListener('click', function() {
 		controlValue = "Stop";
 		binCountInput.disabled = true;
 		clearBtn.disabled = true;
+		window.dropBall = true;
 	}
 	else{
 		controlValue = "Start";
 		binCountInput.disabled = false;
 		clearBtn.disabled = false;
+		window.dropBall = false;
 	}
 	controlBtn.innerHTML = controlValue;
 });
