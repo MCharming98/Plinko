@@ -4,12 +4,15 @@ var canvasWidth = 600;
 var binCountChanged = false;
 var dropBall = false;
 var probability = 0.5;
+var speed = 3;
 
 var binCount = 5;
 var binOffset = 5;
 var binList = [];
 var binWidth;
 var binHeight;
+var maxBallCount; 
+var binHistDelta = 5;
 
 var pinRadius = 5;
 var pinOffset;
@@ -26,6 +29,7 @@ function initBoard(binCount){
 	binHeight = canvasHeight/5;
 	pinDimension = binCount - 1;
 	pinOffset = Math.floor((canvasHeight - binHeight - binOffset)/(pinDimension-1+2));
+	maxBallCount = binHeight/binHistDelta;
 
 	binList = [];
 	let pos = binOffset;
@@ -135,29 +139,39 @@ function draw() {
 	//drawTrajectory();
 
 	if(dropBall){
-		if(ballList.length == 0 /*|| ballList[ballList.length-1].y + ballList[ballList.length-1].r 
-								   > pinTree[0][0].y*/){
+		if(ballList.length == 0 || ballList[ballList.length-1].y + ballList[ballList.length-1].r 
+								   > pinTree[0][0].y){
 			ballList.push(new Ball(ballStartX, ballStartY, ballRadius, pinTree[0][0]));	
 		}
 	}
     let length = ballList.length;
 	for(let i=0; i<length; i++){
 		let ball = ballList.shift();
-		ball.transform(2);
+		ball.transform(speed);
 		if(ball.bin == null && ball.y + ball.r > canvasHeight - binOffset - binHeight){
 			ball.bin = binList[Math.floor((ball.x-binOffset)/binWidth)];
 		}
-		if(ball.bin == null || ball.y + ball.r < ball.bin.histY){
+		if(ball.bin == null || ball.y + ball.r < ball.bin.bottom - ball.bin.histHeight){
 			ball.draw();
 			ballList.push(ball);
 		}
 		else if(ball.bin != null){
 			ball.bin.ballCount++;
+			/*
+			let str = "";
+			binList.forEach((bin) => { str += bin.ballCount + " "; });
+			console.log("1 2 3 4 5");
+			console.log(str);
+			*/
 		}
 	}
-	/*
-	let str = "";
-	binList.forEach((bin) => { str += bin.ballCount + " "; });
-	console.log(str);
-	*/
+
+	binList.forEach((bin) => {
+		maxBallCount = Math.max(maxBallCount, bin.ballCount);
+	});
+	binHistDelta = binHeight/maxBallCount;
+	binList.forEach((bin) => {
+		bin.histHeight = bin.ballCount * binHistDelta;
+	});
+
 }

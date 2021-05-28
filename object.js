@@ -7,17 +7,27 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.ballCount = 0;
   this.endX = this.leftBound + (this.rightBound-this.leftBound)/2;
   this.endY = this.bottom-this.height;
-  this.histY = bottom;
+  this.histHeight = 0;
   
   this.draw = function() {
+    fill("green");
+    noStroke();
+    rect(this.leftBound, this.bottom-this.histHeight, this.rightBound-this.leftBound, this.histHeight);
+
     fill(51);
     stroke(51);
     line(this.leftBound, this.bottom-this.height, this.leftBound, this.bottom);
     line(this.rightBound, this.bottom-this.height, this.rightBound, this.bottom);
     line(this.leftBound, this.bottom, this.rightBound, this.bottom);
+
     textSize(24);
     textAlign(CENTER);
-    text(this.id, (leftBound+rightBound)/2, (this.bottom+this.bottom-this.height)/2)
+    text(this.id, (leftBound+rightBound)/2, (this.bottom+this.bottom-this.height)/2);
+
+
+
+    fill(51);
+    stroke(51);
   }
   
   this.clear = function() {
