@@ -1,5 +1,6 @@
 var binCountInput = document.getElementById("binCountInput");
 var probInput = document.getElementById("probInput");
+var speedInput = document.getElementById("speedInput");
 var controlBtn = document.getElementById("controlBtn");
 var clearBtn = document.getElementById("clearBtn");
 
@@ -28,6 +29,19 @@ probInput.addEventListener('change', function() {
 		probInput.value = p;
 	}
 	window.probability = p;
+});
+
+speedInput.addEventListener('change', function() {
+	let s = speedInput.value;
+	if(s == null || s < 1) {
+		s = 1;
+		speedInput.value = s;
+	}
+	else if(s > 5){
+		s = 5
+		speedInput.value = s;
+	}
+	window.speed = s;
 });
 
 controlBtn.addEventListener('click', function() { 

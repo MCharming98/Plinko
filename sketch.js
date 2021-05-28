@@ -4,7 +4,7 @@ var canvasWidth = 600;
 var binCountChanged = false;
 var dropBall = false;
 var probability = 0.5;
-var speed = 3;
+var speed = 2;
 
 var binCount = 5;
 var binOffset = 5;
