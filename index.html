@@ -3,9 +3,7 @@
 
 <head>
 	<script type="text/javascript" src="lib/math.js"></script>
-	<script type="text/javascript" src="object.js"></script>
 	<script type="text/javascript" src="lib/p5.min.js"></script>
-	<script type="text/javascript" src="sketch.js"></script>
 </head>
 
 <body>
@@ -19,11 +17,41 @@
 		<button type="button" id=controlBtn>Start</button>
 		<button type="button" id=clearBtn>Clear</button>
 	</form>
+	
 	<main></main>
-	<ul id="ballCountList">
-	</ul>
+	
+	<form>
+		<label for="TotalBallCount">Total Ball Count: </label>
+		<label id="totalCount">0</label>
+		<label for="tab">&emsp;</label>
+		<label for="Mean">Mean: </label>
+		<label id="mean">0</label>
+		<label for="tab">&emsp;</label>
+		<label for="Variance">Variance: </label>
+		<label id="variance">0</label>
+		<br><br>
+		<label for="SelectedBin">Selected Bin: </label>
+		<label id="selectedBin">0</label>
+		<br>
+		<label for="BallCount">Ball Count: </label>
+		<label id="ballCount">0</label>
+		<label for="tab">&emsp;</label>
+		<label for="BinProbability">Bin Probability:</label>
+		<label id="BinProbability">0</label>
+		<label for="percentage">%</label>
+		<label for="tab">&emsp;</label>
+		<label for="ConfidenceInterval">Confidence Interval(Bin</label>
+		<label id="CILowBound">0</label>
+		<label for="dash">-</label>
+		<label id="CIHiBound">0</label>
+		<label for="ConfidenceInterval">):</label>
+		<label id="CIValue">0</label>
+		<label for="percentage">%</label>
+	</form>
 </body>
 
+<script type="text/javascript" src="object.js"></script>
+<script type="text/javascript" src="sketch.js"></script>
 <script type="text/javascript" src="controls.js" ></script>
 
 </html>

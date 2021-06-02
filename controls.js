@@ -62,5 +62,5 @@ controlBtn.addEventListener('click', function() {
 });
 
 clearBtn.addEventListener('click', function() {
-	binList.forEach(bin => (bin.clear()));
+	window.clear = true;
 });

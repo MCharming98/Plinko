@@ -1,10 +1,19 @@
+var totalBallCountDisp = document.getElementById("totalCount");
+var meanDisp = document.getElementById("mean");
+var varianceDisp = document.getElementById("variance");
+
 var canvasHeight = 400;
 var canvasWidth = 600;
 
 var binCountChanged = false;
 var dropBall = false;
+var clear = false;
 var probability = 0.5;
 var speed = 2;
+
+var totalBallCount = 0;
+var mean = 0;
+var variance = 0;
 
 var binCount = 5;
 var binOffset = 5;
@@ -121,6 +130,27 @@ function drawTrajectory(){
 	}
 }
 
+function updateStats(){
+	let binData = [];
+	binList.forEach((bin) => {
+		maxBallCount = Math.max(maxBallCount, bin.ballCount);
+		binData = binData.concat(Array(bin.ballCount).fill(bin.id));
+	});
+	
+	binHistDelta = binHeight/maxBallCount;
+	binList.forEach((bin) => {
+		bin.histHeight = bin.ballCount * binHistDelta;
+	});
+
+	totalBallCount = binData.length;
+	mean = totalBallCount == 0 ? 0 : math.mean(binData);
+	variance = totalBallCount == 0 ? 0 : math.variance(binData);
+
+	totalBallCountDisp.innerText = totalBallCount;
+	meanDisp.innerText = mean.toFixed(3);
+	varianceDisp.innerText = variance.toFixed(3);
+}
+
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   frameRate(30);
@@ -133,6 +163,11 @@ function draw() {
 		ballList = [];
 		initBoard(binCount);
 		binCountChanged = false;
+	}
+	if(clear) {
+		binList.forEach(bin => (bin.clear()));
+		updateStats();
+		clear = false;
 	}
 
 	drawBoard();
@@ -157,21 +192,8 @@ function draw() {
 		}
 		else if(ball.bin != null){
 			ball.bin.ballCount++;
-			/*
-			let str = "";
-			binList.forEach((bin) => { str += bin.ballCount + " "; });
-			console.log("1 2 3 4 5");
-			console.log(str);
-			*/
+			updateStats();
 		}
 	}
-
-	binList.forEach((bin) => {
-		maxBallCount = Math.max(maxBallCount, bin.ballCount);
-	});
-	binHistDelta = binHeight/maxBallCount;
-	binList.forEach((bin) => {
-		bin.histHeight = bin.ballCount * binHistDelta;
-	});
 
 }
