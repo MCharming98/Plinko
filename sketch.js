@@ -1,6 +1,9 @@
 var totalBallCountDisp = document.getElementById("totalCount");
 var meanDisp = document.getElementById("mean");
 var varianceDisp = document.getElementById("variance");
+var selectedBinDisp = document.getElementById("selectedBin");
+var ballCountDisp = document.getElementById("ballCount");
+var binProbabilityDisp = document.getElementById("binProbability");
 
 var canvasHeight = 400;
 var canvasWidth = 600;
@@ -14,6 +17,7 @@ var speed = 2;
 var totalBallCount = 0;
 var mean = 0;
 var variance = 0;
+var selectedBin = 0;
 
 var binCount = 5;
 var binOffset = 5;
@@ -43,7 +47,7 @@ function initBoard(binCount){
 	binList = [];
 	let pos = binOffset;
 	for(let i=0; i<binCount; i++){
-		let b = new Bin(i+1, binHeight, canvasHeight-binOffset, pos, pos+binWidth)
+		let b = new Bin(i, binHeight, canvasHeight-binOffset, pos, pos+binWidth)
 		binList.push(b);
 		pos += binWidth;
 	}
@@ -146,6 +150,13 @@ function updateStats(){
 	mean = totalBallCount == 0 ? 0 : math.mean(binData);
 	variance = totalBallCount == 0 ? 0 : math.variance(binData);
 
+	let binBallCount = binList[selectedBin].ballCount;
+	selectedBinDisp.innerText = selectedBin;
+	ballCountDisp.innerText = binBallCount;
+	binProbabilityDisp.innterText = totalBallCount == 0 ? 0 : ((binBallCount/totalBallCount)*100).toFixed(3);
+		
+
+
 	totalBallCountDisp.innerText = totalBallCount;
 	meanDisp.innerText = mean.toFixed(3);
 	varianceDisp.innerText = variance.toFixed(3);
@@ -162,6 +173,7 @@ function draw() {
 	if(binCountChanged) {
 		ballList = [];
 		initBoard(binCount);
+		updateStats();
 		binCountChanged = false;
 	}
 	if(clear) {
@@ -195,5 +207,12 @@ function draw() {
 			updateStats();
 		}
 	}
+}
 
+function mouseClicked(){
+	binList.forEach((bin) =>{
+		if(bin.select(mouseX, mouseY)){
+			selectedBin = bin.id;
+		}
+	});
 }

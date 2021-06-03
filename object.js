@@ -8,9 +8,11 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.endX = this.leftBound + (this.rightBound-this.leftBound)/2;
   this.endY = this.bottom-this.height;
   this.histHeight = 0;
+  this.selected = false;
   
   this.draw = function() {
-    fill("green");
+    if(this.selected) { fill("cyan"); }
+    else { fill("green"); }
     noStroke();
     rect(this.leftBound, this.bottom-this.histHeight, this.rightBound-this.leftBound, this.histHeight);
 
@@ -24,14 +26,19 @@ function Bin(id, height, bottom, leftBound, rightBound){
     textAlign(CENTER);
     text(this.id, (leftBound+rightBound)/2, (this.bottom+this.bottom-this.height)/2);
 
-
-
     fill(51);
     stroke(51);
+  }
+
+  this.select = function(x, y) {
+  	this.selected = x>this.leftBound && x<this.rightBound && 
+  					y<=this.bottom && y>=this.bottom-this.height;
+  	return this.selected;
   }
   
   this.clear = function() {
     this.ballCount = 0;
+    this.selected = false;
   }
 
   return this;
