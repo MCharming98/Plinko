@@ -4,6 +4,9 @@ var varianceDisp = document.getElementById("variance");
 var selectedBinDisp = document.getElementById("selectedBin");
 var ballCountDisp = document.getElementById("ballCount");
 var binProbabilityDisp = document.getElementById("binProbability");
+var CIloBoundDisp = document.getElementById("CILowBound");
+var CIhiBoundDisp = document.getElementById("CIHiBound");
+var CIValueDisp = document.getElementById("CIValue");
 
 var canvasHeight = 400;
 var canvasWidth = 600;
@@ -17,7 +20,9 @@ var speed = 2;
 var totalBallCount = 0;
 var mean = 0;
 var variance = 0;
-var selectedBin = 0;
+var selectedBin = -1;
+var CIloBound = 0;
+var CIhiBound = 0;
 
 var binCount = 5;
 var binOffset = 5;
@@ -51,6 +56,7 @@ function initBoard(binCount){
 		binList.push(b);
 		pos += binWidth;
 	}
+	selectedBin = -1;
 
 	let startX = binList[0].rightBound;
 	let endX = binList[binList.length-1].leftBound;
@@ -150,11 +156,27 @@ function updateStats(){
 	mean = totalBallCount == 0 ? 0 : math.mean(binData);
 	variance = totalBallCount == 0 ? 0 : math.variance(binData);
 
-	let binBallCount = binList[selectedBin].ballCount;
-	selectedBinDisp.innerText = selectedBin;
-	ballCountDisp.innerText = binBallCount;
-	binProbabilityDisp.innterText = totalBallCount == 0 ? 0 : ((binBallCount/totalBallCount)*100).toFixed(3);
-		
+	let CIBallCount = 0;
+	for(let i=CIloBound; i<=CIhiBound; i++){ CIBallCount += binList[i].ballCount; }
+
+	if(selectedBin == -1){
+		selectedBinDisp.innerText = "None";
+		ballCountDisp.innerText = 0;
+		binProbabilityDisp.innerText = 0
+		CIloBoundDisp.innerText = 0;
+		CIhiBoundDisp.innerText = 0;
+		CIValueDisp.innerText = 0
+	}
+	else{
+		let binBallCount = binList[selectedBin].ballCount;
+		selectedBinDisp.innerText = selectedBin;
+		ballCountDisp.innerText = binBallCount;
+		binProbabilityDisp.innerText = totalBallCount == 0 ? 0 : ((binBallCount/totalBallCount)*100).toFixed(3);
+		CIloBoundDisp.innerText = CIloBound;
+		CIhiBoundDisp.innerText = CIhiBound;
+		CIValueDisp.innerText = totalBallCount == 0  ? 0 : ((CIBallCount/totalBallCount)*100).toFixed(3);
+	}
+
 
 
 	totalBallCountDisp.innerText = totalBallCount;
@@ -210,9 +232,26 @@ function draw() {
 }
 
 function mouseClicked(){
-	binList.forEach((bin) =>{
-		if(bin.select(mouseX, mouseY)){
-			selectedBin = bin.id;
+	if(mouseX >=0 && mouseX <= canvasWidth && mouseY >= 0 && mouseY <= canvasHeight){
+		selectedBin = -1;
+		binList.forEach((bin) => {
+			bin.selected = false;
+			bin.CIselected = false;
+		});
+		for(let i=0; i<binList.length; i++){
+			let bin = binList[i];
+			if(bin.select(mouseX, mouseY)){
+				selectedBin = bin.id;
+				let midBin = (binList.length-1)/2;
+				let range = selectedBin - midBin;
+				CIloBound = Math.min(midBin-range, selectedBin);
+				CIhiBound = Math.max(midBin-range, selectedBin);
+				for(let b=CIloBound; b<=CIhiBound; b++){
+					binList[b].CIselected = true;
+				}
+				break;
+			}
 		}
-	});
+		updateStats();
+	}
 }

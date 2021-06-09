@@ -9,9 +9,10 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.endY = this.bottom-this.height;
   this.histHeight = 0;
   this.selected = false;
+  this.CIselected = false;
   
   this.draw = function() {
-    if(this.selected) { fill("cyan"); }
+    if(this.selected || this.CIselected) { fill("cyan"); }
     else { fill("green"); }
     noStroke();
     rect(this.leftBound, this.bottom-this.histHeight, this.rightBound-this.leftBound, this.histHeight);
@@ -24,7 +25,11 @@ function Bin(id, height, bottom, leftBound, rightBound){
 
     textSize(24);
     textAlign(CENTER);
+    noStroke();
+    if(this.selected) { fill("red"); }
+    else { fill(51); }
     text(this.id, (leftBound+rightBound)/2, (this.bottom+this.bottom-this.height)/2);
+
 
     fill(51);
     stroke(51);
