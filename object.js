@@ -15,8 +15,8 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.leftBound = leftBound;
   this.rightBound = rightBound;
   this.ballCount = 0; // Number of balls this bin holds
-  /* (endX, endY) is the point where balls will land on this bin
-     it is at the top middle of the bin, used in calculation of ball trajectory */
+  /* (endX, endY) is a point where balls will land on this bin
+     it is at the top middle of the bin, used in calculation of ball trajectory, does not show in the board */
   this.endX = this.leftBound + (this.rightBound-this.leftBound)/2;
   this.endY = this.bottom-this.height;
   this.histHeight = 0; // Height of the histogram for this bin
