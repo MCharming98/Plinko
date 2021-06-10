@@ -52,10 +52,8 @@ controlBtn.addEventListener('click', function() {
 		clearBtn.disabled = true;
 		window.dropBall = true;
 	}
-	else{
+	else{ // control value == "Stop"
 		controlValue = "Start";
-		binCountInput.disabled = false;
-		clearBtn.disabled = false;
 		window.dropBall = false;
 	}
 	controlBtn.innerHTML = controlValue;
@@ -64,3 +62,8 @@ controlBtn.addEventListener('click', function() {
 clearBtn.addEventListener('click', function() {
 	window.clear = true;
 });
+
+function enableControls(){
+	clearBtn.disabled = false;
+	binCountInput.disabled = false;
+}

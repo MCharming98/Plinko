@@ -213,6 +213,7 @@ function draw() {
 			ballList.push(new Ball(ballStartX, ballStartY, ballRadius, pinTree[0][0]));	
 		}
 	}
+	else if(ballList.length == 0){ window.enableControls(); }
     let length = ballList.length;
 	for(let i=0; i<length; i++){
 		let ball = ballList.shift();
