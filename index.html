@@ -7,47 +7,56 @@
 </head>
 
 <body>
-	<form>
-		<label for="binCount">Bin:</label>
-		<input type="number" id="binCountInput" min=2 max=20 value=5>
-		<label for="probability">Probability:</label>
-		<input type="number" id="probInput" min=0 max=1 step=0.01 value=0.5>
-		<label for="speed">Speed:</label>
-		<input type="number" id="speedInput" min=1 max=5 value=2>
-		<button type="button" id=controlBtn>Start</button>
-		<button type="button" id=clearBtn>Clear</button>
-	</form>
+	<h2>Plinko</h2>
+
+	<p> A <I>Bernoulli trial</I> is an experiment that results in a success with probability <I>p</I> and a failure with probability <I>1-p</I>.  A random variable is said to have a <I>Binomial Distribution</I> if it is the result of recording the number of successes in <I>n</I> independent Bernoulli trials. </p>
+	<P> In the applet below, we have represented repeated independent Bernoulli trials by a single ball falling through an array of pins.  Each time a ball falls onto a pin, it will bounce to the right (i.e. a success) with probability <I>p</I> or to the left (i.e. a failure) with probability <I>1-p</I>.  After the ball falls through the array, it lands in a bin labeled by the corresponding number of successes. </P>
+	<P> Click on a bin to see its corresponding total and probability. Also displayed is a confidence interval centered on the theoretical expected bin. Bins that are included in this confidence interval are highlighted in light blue. </P>
+	<center>
+		<form>
+			<label for="binCount">Bin:</label>
+			<input type="number" id="binCountInput" min=2 max=20 value=5>
+			<label for="probability">Probability:</label>
+			<input type="number" id="probInput" min=0 max=1 step=0.01 value=0.5>
+			<label for="speed">Speed:</label>
+			<input type="number" id="speedInput" min=1 max=5 value=2>
+			<button type="button" id=controlBtn>Start</button>
+			<button type="button" id=clearBtn>Clear</button>
+		</form>
 	
-	<main></main>
+		<main style="margin-top: 5px"></main>
 	
-	<form>
-		<label for="TotalBallCount">Total Ball Count: </label>
-		<label id="totalCount">0</label>
-		<label for="tab">&emsp;</label>
-		<label for="Mean">Mean: </label>
-		<label id="mean">0</label>
-		<label for="tab">&emsp;</label>
-		<label for="Variance">Variance: </label>
-		<label id="variance">0</label>
-		<br><br>
-		<label for="SelectedBin">Selected Bin: </label>
-		<label id="selectedBin">None</label>
-		<br>
-		<label for="BallCount">Ball Count: </label>
-		<label id="ballCount">0</label>
-		<label for="tab">&emsp;</label>
-		<label for="BinProbability">Bin Probability:</label>
-		<label id="binProbability">0</label>
-		<label for="percentage">%</label>
-		<label for="tab">&emsp;</label>
-		<label for="ConfidenceInterval">Confidence Interval(Bin</label>
-		<label id="CILowBound">0</label>
-		<label for="dash">-</label>
-		<label id="CIHiBound">0</label>
-		<label for="ConfidenceInterval">):</label>
-		<label id="CIValue">0</label>
-		<label for="percentage">%</label>
-	</form>
+		<form style="background-color:#E5E4E2; width: 600px; margin-top: 5px">
+			<label for="TotalBallCount">Total Ball Count: </label>
+			<label id="totalCount">0</label>
+			<label for="tab">&emsp;</label>
+			<label for="Mean">Mean: </label>
+			<label id="mean">0</label>
+			<label for="tab">&emsp;</label>
+			<label for="Variance">Variance: </label>
+			<label id="variance">0</label>
+			<br><br>
+			<label for="SelectedBin">Selected Bin: </label>
+			<label id="selectedBin">None</label>
+			<br>
+			<label for="BallCount">Ball Count: </label>
+			<label id="ballCount">0</label>
+			<label for="tab">&emsp;</label>
+			<label for="BinProbability">Bin Probability:</label>
+			<label id="binProbability">0</label>
+			<label for="percentage">%</label>
+			<label for="tab">&emsp;</label>
+			<label for="ConfidenceInterval">Confidence Interval(Bin</label>
+			<label id="CILowBound">0</label>
+			<label for="dash">-</label>
+			<label id="CIHiBound">0</label>
+			<label for="ConfidenceInterval">):</label>
+			<label id="CIValue">0</label>
+			<label for="percentage">%</label>
+		</form>
+	</center>
+
+	<P> * The name Plinko refers to a game played on <i>The Price Is Right</i>.  However, the game show version is played on a rectangular array of pins instead of a triangular array.  It would be more appropriate to call our applet Galton's board or a quincunx board; however this is far more difficult to pronounce. </P>
 </body>
 
 <script type="text/javascript" src="object.js"></script>

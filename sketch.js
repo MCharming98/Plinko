@@ -1,3 +1,11 @@
+/**
+ * The main file to implement UI with p5.js,
+ * also contains the logistics for calculating the statistics.
+ *
+ * @author Chen Meng
+ */
+
+// html elements for dispaly of statistics
 var totalBallCountDisp = document.getElementById("totalCount");
 var meanDisp = document.getElementById("mean");
 var varianceDisp = document.getElementById("variance");
@@ -17,20 +25,20 @@ var clear = false;
 var probability = 0.5;
 var speed = 2;
 
-var totalBallCount = 0;
-var mean = 0;
-var variance = 0;
-var selectedBin = -1;
-var CIloBound = 0;
-var CIhiBound = 0;
+var totalBallCount;
+var mean;
+var variance;
+var selectedBin;
+var CIloBound;
+var CIhiBound;
 
 var binCount = 5;
 var binOffset = 5;
-var binList = [];
+var binList;
 var binWidth;
 var binHeight;
 var maxBallCount; 
-var binHistDelta = 5;
+var binHistDelta;
 
 var pinRadius = 5;
 var pinOffset;
@@ -43,6 +51,14 @@ var ballRadius = 10;
 var ballList = [];
 
 function initBoard(binCount){
+	totalBallCount = 0;
+	mean = 0;
+	variance = 0;
+	selectedBin = -1;
+	CIloBound = 0;
+	CIhiBound = 0;
+	binHistDelta = 5;
+
 	binWidth = Math.floor((canvasWidth-(binOffset*2))/binCount);
 	binHeight = canvasHeight/5;
 	pinDimension = binCount - 1;
@@ -56,7 +72,6 @@ function initBoard(binCount){
 		binList.push(b);
 		pos += binWidth;
 	}
-	selectedBin = -1;
 
 	let startX = binList[0].rightBound;
 	let endX = binList[binList.length-1].leftBound;
