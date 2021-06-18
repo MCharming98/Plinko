@@ -1,4 +1,10 @@
 /**
+ * Contains the objects present in the plinko board
+ *
+ * @author Chen Meng
+ */
+
+/**
  * A single bin object in the bottom of the plinko board
  * 
  * @param {number} id The number of the bin
@@ -16,7 +22,9 @@ function Bin(id, height, bottom, leftBound, rightBound){
   this.rightBound = rightBound;
   this.ballCount = 0; // Number of balls this bin holds
   /* (endX, endY) is a point where balls will land on this bin
-     it is at the top middle of the bin, used in calculation of ball trajectory, does not show in the board */
+   * it is at the top middle of the bin, used in calculation of ball trajectory, does not show in the board 
+   * See the details in the end of initBoard() in sketch.js
+   */
   this.endX = this.leftBound + (this.rightBound-this.leftBound)/2;
   this.endY = this.bottom-this.height;
   this.histHeight = 0; // Height of the histogram for this bin
