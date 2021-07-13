@@ -321,10 +321,10 @@ function mouseClicked(){
 			if(bin.select(mouseX, mouseY)){
 				// Calculate the range of the confidence interval
 				selectedBin = bin.id;
-				let midBin = (binList.length-1)/2;
+				let midBin = Math.round(mean);
 				let range = selectedBin - midBin;
-				CIloBound = Math.min(midBin-range, selectedBin);
-				CIhiBound = Math.max(midBin-range, selectedBin);
+				CIloBound = Math.min(Math.max(0, midBin-range)/* Prevent the bound from going out of range*/, selectedBin);
+				CIhiBound = Math.max(Math.min(binList.length-1, midBin-range), selectedBin);
 				for(let b=CIloBound; b<=CIhiBound; b++){
 					binList[b].CIselected = true;
 				}
